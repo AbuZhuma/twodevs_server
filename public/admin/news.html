@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создание новости</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea {
+            min-height: 100px;
+        }
+        .changelog-item {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        .changelog-item input {
+            flex-grow: 1;
+            margin-right: 10px;
+            margin-bottom: 0;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #addChangelog {
+            background-color: #2196F3;
+            margin-bottom: 15px;
+        }
+        #addChangelog:hover {
+            background-color: #0b7dda;
+        }
+        #message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        .success {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+        .error {
+            background-color: #f2dede;
+            color: #a94442;
+        }
+        .removeChangelog {
+            background-color: #f44336;
+        }
+        .removeChangelog:hover {
+            background-color: #d32f2f;
+        }
+        #password {
+            width: 50%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Создание новой новости</h1>
+    
+    <form id="newsForm">
+        <label for="title">Заголовок:</label>
+        <input type="text" id="title" name="title" required>
+        
+        <label for="date">Дата:</label>
+        <input type="date" id="date" name="date" required>
+        
+        <label for="author">Автор:</label>
+        <input type="text" id="author" name="author" required>
+        
+        <label for="description">Описание:</label>
+        <textarea id="description" name="description" required></textarea>
+        
+        <label>Changelog:</label>
+        <div id="changelogContainer">
+            <div class="changelog-item">
+                <input type="text" name="changelog" placeholder="Введите изменение" required>
+                <button type="button" class="removeChangelog">Delete</button>
+            </div>
+        </div>
+        
+        <button type="button" id="addChangelog">Добавить изменение</button>
+        
+        <label for="password">Пароль для доступа:</label>
+        <input type="password" id="password" name="password" required>
+        
+        <button type="submit">Создать новость</button>
+    </form>
+    
+    <div id="message"></div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('newsForm');
+            const changelogContainer = document.getElementById('changelogContainer');
+            const addChangelogBtn = document.getElementById('addChangelog');
+            const messageDiv = document.getElementById('message');
+            
+            addChangelogBtn.addEventListener('click', function() {
+                const div = document.createElement('div');
+                div.className = 'changelog-item';
+                div.innerHTML = `
+                    <input type="text" name="changelog" placeholder="Введите изменение" required>
+                    <button type="button" class="removeChangelog">Delete</button>
+                `;
+                changelogContainer.appendChild(div);
+                
+                div.querySelector('.removeChangelog').addEventListener('click', function() {
+                    if (changelogContainer.children.length > 1) {
+                        div.remove();
+                    } else {
+                        alert('Должно быть хотя бы одно изменение!');
+                    }
+                });
+            });
+            
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const formData = {
+                    title: document.getElementById('title').value,
+                    date: document.getElementById('date').value,
+                    author: document.getElementById('author').value,
+                    description: document.getElementById('description').value,
+                    changelog: Array.from(document.getElementsByName('changelog')).map(input => input.value),
+                    password: document.getElementById('password').value
+                };
+                
+                try {
+                    const response = await fetch('https://twodevs.yuno.ws/api/news/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(formData)
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        showMessage(data.message || 'Новость успешно создана!', 'success');
+                        form.reset();
+                        while (changelogContainer.children.length > 1) {
+                            changelogContainer.removeChild(changelogContainer.lastChild);
+                        }
+                        changelogContainer.querySelector('input').value = '';
+                    } else {
+                        showMessage(data.message || 'Произошла ошибка при создании новости', 'error');
+                    }
+                } catch (error) {
+                    console.error('Ошибка:', error);
+                    showMessage('Произошла ошибка при отправке запроса', 'error');
+                }
+            });
+            
+            function showMessage(text, type) {
+                messageDiv.textContent = text;
+                messageDiv.className = type;
+                messageDiv.style.display = 'block';
+                
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 5000);
+            }
+            
+            document.querySelector('.removeChangelog').addEventListener('click', function() {
+                if (changelogContainer.children.length > 1) {
+                    this.parentElement.remove();
+                } else {
+                    alert('Должно быть хотя бы одно изменение!');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
