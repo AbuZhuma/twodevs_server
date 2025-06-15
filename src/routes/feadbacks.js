@@ -9,7 +9,7 @@ const TELEGRAM_CHANNEL = process.env.TELEGRAM_CHANNEL;
 
 router.post("/", async (req, res) => {
   try {
-    if (!req.body.text || !req.body.email) {
+    if (!req.body.text || !req.body.email || !req.body.title) {
       return res.status(400).json({ message: "Text and email are required!" });
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(req.body.email)) {
@@ -26,15 +26,14 @@ router.post("/", async (req, res) => {
     await newFb.save();
 
     const telegramMessage = `
-📢 <b>New Order Received!</b>  
+📢 <b>${req.body.title}</b>  
 
 📅 <b>Date:</b> ${date.toLocaleString()}  
-📧 <b>From:</b> ${req.body.email}  
+📧 <b>From:</b> ${req.body.email} 
 
-💬 <b>Message:</b>  
 ${req.body.text}  
 
-#Orders #UserReview
+#Orders #UserReview #Feadback
     `;
 
     await axios.post(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
