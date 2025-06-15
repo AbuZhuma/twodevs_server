@@ -23,7 +23,7 @@ app.use(limiter);
 app.use(cors());
 app.use(helmet());
 app.use(express.json());
-app.use("/public", express.static(path.join(__dirname, '../public')));
+app.use("/static", express.static(path.join(__dirname, '../public')));
 app.use("/api/news", news)
 app.use("/api/feabdacks", fb)
 
