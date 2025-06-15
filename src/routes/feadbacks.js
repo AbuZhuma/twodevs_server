@@ -30,9 +30,7 @@ router.post("/", async (req, res) => {
 
 📅 <b>Date:</b> ${date.toLocaleString()}  
 📧 <b>From:</b> ${req.body.email} 
-
 ${req.body.text}  
-
 #Orders #UserReview #Feadback
     `;
 
