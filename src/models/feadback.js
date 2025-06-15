@@ -6,5 +6,5 @@ const SchemaFb = new mongoose.Schema({
       date: { type: String, required: true }
 })
 
-const Fb = mongoose.model('feadback', SchemaFb, "feadbacks");
+const Fb = mongoose.model('order', SchemaFb, "orders");
 module.exports = Fb

@@ -2,7 +2,7 @@ const New = require("../../models/news");
 const axios = require("axios"); // Для отправки запросов в Telegram API
 require("dotenv").config();
 
-const TELEGRAM_TOKEN = "7527268044:AAEiklHroixprSVEY3HjMA_339GV-CaFmhw";
+const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN;
 const TELEGRAM_CHANNEL = "@twodevstm";
 
 const createNews = async (req, res) => {

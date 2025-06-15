@@ -26,15 +26,15 @@ router.post("/", async (req, res) => {
     await newFb.save();
 
     const telegramMessage = `
-    📢 <b>New Feedback Received!</b>  
+📢 <b>New Order Received!</b>  
 
-    📅 <b>Date:</b> ${date.toLocaleString()}  
-    📧 <b>From:</b> ${req.body.email}  
+📅 <b>Date:</b> ${date.toLocaleString()}  
+📧 <b>From:</b> ${req.body.email}  
 
-    💬 <b>Message:</b>  
-    ${req.body.text}  
+💬 <b>Message:</b>  
+${req.body.text}  
 
-    #Feedback #UserReview
+#Orders #UserReview
     `;
 
     await axios.post(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
@@ -43,7 +43,7 @@ router.post("/", async (req, res) => {
       parse_mode: "HTML",
     });
 
-    res.status(200).json({ message: "Feedback sent successfully!" });
+    res.status(200).json({ message: "Order sent successfully!" });
 
   } catch (error) {
     console.error("Error:", error);
