@@ -1,0 +1,29 @@
+{
+  "name": "yuno-dht",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./src/server"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "ansi-escapes": "^7.0.0",
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.1.0",
+    "log-update": "^6.1.0",
+    "mongoose": "^8.14.0",
+    "morgan": "^1.10.0",
+    "nodemailer": "^7.0.3",
+    "resend": "^4.5.1",
+    "sqlite3": "^5.1.7",
+    "stripe": "^18.1.0",
+    "ws": "^8.18.1"
+  }
+}
