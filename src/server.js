@@ -2,7 +2,6 @@ const http = require('http');
 const express = require("express");
 const news = require("./routes/news")
 const fb = require("./routes/feadbacks")
-const admin = require("./routes/admin")
 
 const cors = require("cors")
 const { default: helmet } = require('helmet');
@@ -27,7 +26,6 @@ app.use(express.json());
 app.use("/static", express.static(path.join(__dirname, '../public')));
 app.use("/api/news", news)
 app.use("/api/feabdacks", fb)
-app.use("/api/admin", admin)
 
 mongoose
   .connect(process.env.MONGO_URI)

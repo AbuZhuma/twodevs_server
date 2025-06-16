@@ -16,10 +16,6 @@ const createNews = async (req, res) => {
     if (process.env.NEWS_PASSWORD !== body.password) {
       return res.status(400).json({ message: "Wrong password!" });
     }
-
-    const newNews = new New(body);
-    await newNews.save();
-
     const telegramMessage = `
 🚀 <b>New Blog Post Published!</b> 🚀
 
@@ -36,15 +32,15 @@ ${body.changelog}
 #Blog #Tech #Updates
 `;
 
-    // Отправка в Telegram
-    await axios.post(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+    const telegramResponse = await axios.post(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
       chat_id: TELEGRAM_CHANNEL,
       text: telegramMessage,
       parse_mode: "HTML",
     });
-
+    const newNews = new New(body);
+    body.messageId = telegramResponse.data.result.message_id
+    await newNews.save();
     res.status(200).json({ message: "New created and posted to Telegram!" });
-
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ message: "Server error", error: error.message });
