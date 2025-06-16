@@ -1,10 +1,14 @@
 const New = require("../../models/news");
+require("dotenv").config();
 
-const deleteNews = async(req, res) => {
+const deleteNews = async (req, res) => {
       try {
             const body = req.body
-            if(!body.version) return res.status(400).json({message:"Please send version!"})
-            await New.findOneAndDelete({version: body.version})
+            if (!body.title) return res.status(400).json({ message: "Please send title!" })
+            if (process.env.DELETE_PASSWORD !== body.password) {
+                  return res.status(400).json({ message: "Wrong password!" });
+            }
+            await New.findOneAndDelete({ title: body.title })
             res.status(200).json("Deleted!")
       } catch (error) {
             console.log(error);
