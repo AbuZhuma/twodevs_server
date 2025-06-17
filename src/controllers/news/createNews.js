@@ -38,8 +38,9 @@ ${body.changelog}
       parse_mode: "HTML",
     });
     body.changelog = body.changelog.split("\n")
-    const newNews = new New(body);
+    
     body.messageId = telegramResponse.data.result.message_id
+    const newNews = new New(body);
     await newNews.save();
     res.status(200).json({ message: "New created and posted to Telegram!" });
   } catch (error) {

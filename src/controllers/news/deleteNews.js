@@ -23,7 +23,7 @@ const deleteNews = async (req, res) => {
             try {
                 await axios.post(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/deleteMessage`, {
                     chat_id: TELEGRAM_CHANNEL,
-                    message_id: post.messageId
+                    message_id: Number(post.messageId)
                 });
             } catch (tgError) {
                 console.error("Telegram delete error:", tgError.response?.data || tgError.message);
