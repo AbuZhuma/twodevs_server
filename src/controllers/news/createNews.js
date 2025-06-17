@@ -37,6 +37,7 @@ ${body.changelog}
       text: telegramMessage,
       parse_mode: "HTML",
     });
+    body.changelog = body.changelog.split("\n")
     const newNews = new New(body);
     body.messageId = telegramResponse.data.result.message_id
     await newNews.save();
